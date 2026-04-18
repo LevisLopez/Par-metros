@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#07111a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="RiverMind">
+<link rel="manifest" href="manifest.json">
+<title>RiverMind Lux</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Exo+2:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #07111a;
+    --bg2:       #0d1e2a;
+    --bg3:       #0a1820;
+    --border:    #1a3545;
+    --border2:   #12232e;
+    --cyan:      #4ab8d0;
+    --cyan-dim:  #1a8fa8;
+    --cyan-text: #7dd4e8;
+    --green:     #18c48a;
+    --amber:     #c87a1a;
+    --mono:      'Share Tech Mono', monospace;
+    --body:      'Exo 2', sans-serif;
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--cyan-text);
+    font-family: var(--body);
+    overflow: hidden;
+    touch-action: none;
+  }
+
+  #app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    height: 100dvh;
+    max-width: 420px;
+    margin: 0 auto;
+    padding: env(safe-area-inset-top, 12px) 0 env(safe-area-inset-bottom, 12px);
+  }
+
+  /* STATUS BAR */
+  #status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 22px 4px;
+    flex-shrink: 0;
+  }
+  #status-bar span { color: var(--cyan-dim); font-family: var(--mono); font-size: 10px; letter-spacing: 0.5px; }
+
+  /* TOP BAR */
+  #top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px 22px 10px;
+    flex-shrink: 0;
+  }
+  .brand { font-family: var(--mono); font-size: 12px; color: var(--cyan-dim); letter-spacing: 2px; }
+  .brand span { color: var(--cyan); font-size: 13px; }
+  #online-dot { display: flex; align-items: center; gap: 5px; }
+  #online-dot div { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+  #online-dot span { color: var(--green); font-family: var(--mono); font-size: 9px; letter-spacing: 1px; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  /* HAMBURGER */
+  #hamburger {
+    display: flex; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px;
+  }
+  #hamburger div { width: 24px; height: 2px; background: var(--cyan); border-radius: 2px; }
+
+  /* NAV */
+  #nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px 8px;
+    flex-shrink: 0;
+  }
+  .nav-btn {
+    background: none; border: none; color: var(--cyan); font-size: 26px;
+    cursor: pointer; padding: 8px 12px; line-height: 1;
+    transition: opacity 0.15s;
+  }
+  .nav-btn:active { opacity: 0.5; }
+  #param-name {
+    font-family: var(--mono);
+    font-size: 20px;
+    color: var(--cyan-text);
+    letter-spacing: 1px;
+    text-align: center;
+    transition: opacity 0.2s;
+  }
+
+  /* DOTS */
+  #dots {
+    display: flex; justify-content: center; gap: 5px;
+    margin-bottom: 10px; flex-shrink: 0;
+  }
+  .dot {
+    border-radius: 50%; background: var(--border);
+    transition: all 0.25s;
+  }
+  .dot.active { background: var(--cyan); }
+
+  /* BIG BAR */
+  #bar-wrap {
+    flex: 1;
+    padding: 0 16px;
+    min-height: 0;
+  }
+  #big-bar {
+    width: 100%;
+    height: 100%;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+    cursor: ns-resize;
+    touch-action: none;
+  }
+  #grid-lines {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    justify-content: space-between;
+    pointer-events: none;
+  }
+  .grid-line { width: 100%; height: 1px; background: rgba(74,184,208,0.12); }
+  #big-fill {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    border-radius: 0 0 9px 9px;
+    transition: height 0.04s, background 0.3s;
+    pointer-events: none;
+  }
+  #big-val {
+    position: absolute; top: 50%; left: 0; right: 0;
+    transform: translateY(-50%);
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 52px;
+    color: rgba(200,240,248,0.6);
+    pointer-events: none;
+    letter-spacing: 4px;
+    transition: color 0.3s;
+  }
+  #param-desc {
+    position: absolute;
+    bottom: 14px; left: 0; right: 0;
+    text-align: center;
+    font-size: 11px;
+    color: rgba(74,184,208,0.5);
+    font-family: var(--mono);
+    letter-spacing: 0.5px;
+    pointer-events: none;
+  }
+
+  /* BOTTOM */
+  #bottom {
+    flex-shrink: 0;
+    padding: 10px 16px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  #apply-btn {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--cyan-dim);
+    border-radius: 10px;
+    color: var(--cyan-text);
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 11px;
+    cursor: pointer;
+    letter-spacing: 2px;
+    transition: all 0.2s;
+  }
+  #apply-btn:active { transform: scale(0.98); }
+
+  #footer {
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--border);
+    letter-spacing: 1px;
+  }
+
+  /* MENU OVERLAY */
+  #menu-overlay {
+    display: none;
+    position: fixed; inset: 0; z-index: 100;
+    background: rgba(7,17,26,0.97);
+    flex-direction: column;
+    padding: 60px 30px 40px;
+  }
+  #menu-overlay.open { display: flex; }
+  #menu-title {
+    font-family: var(--mono); font-size: 11px; color: var(--cyan-dim);
+    letter-spacing: 3px; margin-bottom: 30px;
+  }
+  .menu-item {
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid var(--border2);
+    padding: 14px 0;
+    cursor: pointer;
+  }
+  .menu-item-name { font-family: var(--mono); font-size: 15px; color: var(--cyan-text); }
+  .menu-item-val { font-family: var(--mono); font-size: 15px; }
+  #menu-close {
+    margin-top: auto;
+    background: none; border: 1px solid var(--border);
+    border-radius: 8px; color: var(--cyan-dim);
+    font-family: var(--mono); font-size: 11px;
+    padding: 12px; cursor: pointer; letter-spacing: 2px;
+  }
+
+  /* FADE TRANSITION */
+  .fade-out { opacity: 0 !important; }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <div id="status-bar">
+    <span>▲ 4G ▮▮▮</span>
+    <span>100% ▮</span>
+  </div>
+
+  <div id="top-bar">
+    <div class="brand">RIVER<span>MIND</span> <span style="font-size:9px;color:var(--cyan-dim);">LUX</span></div>
+    <div id="online-dot"><div></div><span>ONLINE</span></div>
+    <div id="hamburger" onclick="toggleMenu()">
+      <div></div><div></div><div></div>
+    </div>
+  </div>
+
+  <div id="nav">
+    <button class="nav-btn" onclick="changePage(-1)">&#10094;</button>
+    <div id="param-name">Nonchalance</div>
+    <button class="nav-btn" onclick="changePage(1)">&#10095;</button>
+  </div>
+
+  <div id="dots"></div>
+
+  <div id="bar-wrap">
+    <div id="big-bar">
+      <div id="grid-lines"></div>
+      <div id="big-fill"></div>
+      <div id="big-val">62</div>
+      <div id="param-desc">Emotional indifference to external stimuli</div>
+    </div>
+  </div>
+
+  <div id="bottom">
+    <button id="apply-btn" onclick="applyChange()">APPLY CHANGES</button>
+    <div id="footer">RiverMind Lux v4.2 · Amanda W.</div>
+  </div>
+
+</div>
+
+<!-- MENU OVERLAY -->
+<div id="menu-overlay">
+  <div id="menu-title">ALL PARAMETERS</div>
+  <div id="menu-list"></div>
+  <button id="menu-close" onclick="toggleMenu()">CLOSE</button>
+</div>
+
+<script>
+const params = [
+  { name:'Nonchalance', val:62, desc:'Emotional indifference to external stimuli' },
+  { name:'Euphoria',    val:75, desc:'Overall well-being and elevated mood' },
+  { name:'Desire',      val:48, desc:'Drive, motivation and inner craving' },
+  { name:'Empathy',     val:55, desc:'Emotional connection with other people' },
+  { name:'Anxiety',     val:30, desc:'Alertness level and internal tension' },
+  { name:'Serenity',    val:70, desc:'Deep calm and inner stability' },
+  { name:'Focus',       val:80, desc:'Cognitive concentration and mental clarity' },
+  { name:'Sensitivity', val:65, desc:'Intensity of sensory perception' },
+  { name:'Inhibition',  val:50, desc:'Control over impulses and behaviors' },
+  { name:'Nostalgia',   val:40, desc:'Emotional attachment to the past' },
+];
+
+let cur = 0;
+
+function fillColor(v) {
+  if (v > 70) return '#18c48a';
+  if (v > 40) return '#1ab8d0';
+  return '#c87a1a';
+}
+
+function buildDots() {
+  const c = document.getElementById('dots');
+  c.innerHTML = params.map((_,i) => `<div class="dot${i===cur?' active':''}" style="width:${i===cur?9:5}px;height:${i===cur?9:5}px;"></div>`).join('');
+}
+
+function renderBar(animate) {
+  const p = params[cur];
+  if (animate) {
+    document.getElementById('param-name').classList.add('fade-out');
+    setTimeout(() => {
+      document.getElementById('param-name').textContent = p.name;
+      document.getElementById('param-name').classList.remove('fade-out');
+    }, 150);
+  } else {
+    document.getElementById('param-name').textContent = p.name;
+  }
+  document.getElementById('big-val').textContent = p.val;
+  document.getElementById('param-desc').textContent = p.desc;
+  const fill = document.getElementById('big-fill');
+  fill.style.height = p.val + '%';
+  fill.style.background = fillColor(p.val);
+  buildDots();
+}
+
+function buildGrid() {
+  const g = document.getElementById('grid-lines');
+  g.innerHTML = Array.from({length:13}).map(()=>`<div class="grid-line"></div>`).join('');
+}
+
+function changePage(dir) {
+  cur = (cur + dir + params.length) % params.length;
+  renderBar(true);
+}
+
+// Touch/mouse drag on bar
+const bar = document.getElementById('big-bar');
+let dragging = false;
+
+function getValFromY(clientY) {
+  const rect = bar.getBoundingClientRect();
+  const rel = (rect.bottom - clientY) / rect.height;
+  return Math.max(0, Math.min(100, Math.round(rel * 100)));
+}
+
+function setVal(v) {
+  params[cur].val = v;
+  document.getElementById('big-val').textContent = v;
+  const fill = document.getElementById('big-fill');
+  fill.style.height = v + '%';
+  fill.style.background = fillColor(v);
+}
+
+bar.addEventListener('mousedown', e => { dragging = true; setVal(getValFromY(e.clientY)); });
+window.addEventListener('mousemove', e => { if (dragging) setVal(getValFromY(e.clientY)); });
+window.addEventListener('mouseup', () => { dragging = false; });
+
+bar.addEventListener('touchstart', e => { dragging = true; setVal(getValFromY(e.touches[0].clientY)); e.preventDefault(); }, {passive:false});
+window.addEventListener('touchmove', e => { if (dragging) { setVal(getValFromY(e.touches[0].clientY)); e.preventDefault(); } }, {passive:false});
+window.addEventListener('touchend', () => { dragging = false; });
+
+// Apply button
+function applyChange() {
+  const btn = document.getElementById('apply-btn');
+  btn.textContent = 'SYNCING...';
+  btn.style.color = '#18c48a';
+  btn.style.borderColor = '#18c48a';
+  setTimeout(() => {
+    btn.textContent = '✓ APPLIED';
+    setTimeout(() => {
+      btn.textContent = 'APPLY CHANGES';
+      btn.style.color = '';
+      btn.style.borderColor = '';
+    }, 1400);
+  }, 800);
+}
+
+// Menu overlay
+function toggleMenu() {
+  const m = document.getElementById('menu-overlay');
+  m.classList.toggle('open');
+  if (m.classList.contains('open')) renderMenuList();
+}
+
+function renderMenuList() {
+  document.getElementById('menu-list').innerHTML = params.map((p,i) =>
+    `<div class="menu-item" onclick="jumpTo(${i})">
+      <span class="menu-item-name">${p.name}</span>
+      <span class="menu-item-val" style="color:${fillColor(p.val)}">${p.val}</span>
+    </div>`
+  ).join('');
+}
+
+function jumpTo(i) {
+  cur = i;
+  toggleMenu();
+  renderBar(true);
+}
+
+// Init
+buildGrid();
+renderBar(false);
+
+// Service Worker registration
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
