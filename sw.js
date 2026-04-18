@@ -1,9 +1,10 @@
-const CACHE = 'rivermind-v1';
+const CACHE = 'rivermind-v2';
+const BASE = '/Par-metros';
 const ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  'https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Exo+2:wght@300;400;500&display=swap'
+  BASE + '/',
+  BASE + '/index.html',
+  BASE + '/manifest.json',
+  BASE + '/sw.js'
 ];
 
 self.addEventListener('install', e => {
@@ -24,6 +25,8 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('fetch', e => {
   e.respondWith(
-    caches.match(e.request).then(cached => cached || fetch(e.request).catch(() => caches.match('/index.html')))
+    caches.match(e.request).then(cached =>
+      cached || fetch(e.request).catch(() => caches.match(BASE + '/index.html'))
+    )
   );
 });
