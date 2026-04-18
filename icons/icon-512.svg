@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 192 192">
+  <rect width="192" height="192" rx="32" fill="#07111a"/>
+  <rect x="28" y="36" width="136" height="120" rx="6" fill="#0d1e2a" stroke="#1a3545" stroke-width="1.5"/>
+  <rect x="44" y="56" width="104" height="80" rx="4" fill="#1ab8d0" opacity="0.7"/>
+  <rect x="44" y="100" width="104" height="36" rx="0 0 4 4" fill="#1ab8d0"/>
+  <line x1="44" y1="64" x2="148" y2="64" stroke="#07111a" stroke-width="1" opacity="0.4"/>
+  <line x1="44" y1="72" x2="148" y2="72" stroke="#07111a" stroke-width="1" opacity="0.4"/>
+  <line x1="44" y1="80" x2="148" y2="80" stroke="#07111a" stroke-width="1" opacity="0.4"/>
+  <line x1="44" y1="88" x2="148" y2="88" stroke="#07111a" stroke-width="1" opacity="0.4"/>
+  <line x1="44" y1="96" x2="148" y2="96" stroke="#07111a" stroke-width="1" opacity="0.4"/>
+  <text x="96" y="176" text-anchor="middle" font-family="monospace" font-size="11" fill="#2a8fa8" letter-spacing="2">RIVERMIND</text>
+</svg>
