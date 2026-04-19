@@ -48,7 +48,6 @@
     padding: env(safe-area-inset-top, 12px) 0 env(safe-area-inset-bottom, 12px);
   }
 
-  /* STATUS BAR */
   #status-bar {
     display: flex;
     justify-content: space-between;
@@ -58,7 +57,6 @@
   }
   #status-bar span { color: var(--cyan-dim); font-family: var(--mono); font-size: 10px; letter-spacing: 0.5px; }
 
-  /* TOP BAR */
   #top-bar {
     display: flex;
     justify-content: space-between;
@@ -73,13 +71,9 @@
   #online-dot span { color: var(--green); font-family: var(--mono); font-size: 9px; letter-spacing: 1px; }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
-  /* HAMBURGER */
-  #hamburger {
-    display: flex; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px;
-  }
+  #hamburger { display: flex; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
   #hamburger div { width: 24px; height: 2px; background: var(--cyan); border-radius: 2px; }
 
-  /* NAV */
   #nav {
     display: flex;
     justify-content: space-between;
@@ -102,33 +96,18 @@
     transition: opacity 0.2s;
   }
 
-  /* DOTS */
-  #dots {
-    display: flex; justify-content: center; gap: 5px;
-    margin-bottom: 10px; flex-shrink: 0;
-  }
-  .dot {
-    border-radius: 50%; background: var(--border);
-    transition: all 0.25s;
-  }
+  #dots { display: flex; justify-content: center; gap: 5px; margin-bottom: 10px; flex-shrink: 0; }
+  .dot { border-radius: 50%; background: var(--border); transition: all 0.25s; }
   .dot.active { background: var(--cyan); }
 
-  /* BIG BAR */
-  #bar-wrap {
-    flex: 1;
-    padding: 0 16px;
-    min-height: 0;
-  }
+  #bar-wrap { flex: 1; padding: 0 16px; min-height: 0; }
   #big-bar {
-    width: 100%;
-    height: 100%;
+    width: 100%; height: 100%;
     background: var(--bg2);
     border: 1px solid var(--border);
     border-radius: 10px;
-    position: relative;
-    overflow: hidden;
-    cursor: ns-resize;
-    touch-action: none;
+    position: relative; overflow: hidden;
+    cursor: ns-resize; touch-action: none;
   }
   #grid-lines {
     position: absolute; inset: 0;
@@ -137,6 +116,7 @@
     pointer-events: none;
   }
   .grid-line { width: 100%; height: 1px; background: rgba(74,184,208,0.12); }
+
   #big-fill {
     position: absolute; bottom: 0; left: 0; right: 0;
     border-radius: 0 0 9px 9px;
@@ -165,7 +145,38 @@
     pointer-events: none;
   }
 
-  /* BOTTOM */
+  /* NEURAL SYNC OVERLAY */
+  #sync-overlay {
+    display: none;
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(7,17,26,0.92);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+  }
+  #sync-overlay.active { display: flex; }
+
+  #sync-canvas {
+    width: 260px; height: 260px;
+  }
+
+  #sync-label {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--cyan);
+    letter-spacing: 3px;
+    text-align: center;
+  }
+  #sync-sublabel {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--cyan-dim);
+    letter-spacing: 2px;
+    text-align: center;
+    margin-top: -12px;
+  }
+
   #bottom {
     flex-shrink: 0;
     padding: 10px 16px 10px;
@@ -196,7 +207,6 @@
     letter-spacing: 1px;
   }
 
-  /* MENU OVERLAY */
   #menu-overlay {
     display: none;
     position: fixed; inset: 0; z-index: 100;
@@ -205,18 +215,14 @@
     padding: 60px 30px 40px;
   }
   #menu-overlay.open { display: flex; }
-  #menu-title {
-    font-family: var(--mono); font-size: 11px; color: var(--cyan-dim);
-    letter-spacing: 3px; margin-bottom: 30px;
-  }
+  #menu-title { font-family: var(--mono); font-size: 11px; color: var(--cyan-dim); letter-spacing: 3px; margin-bottom: 30px; }
   .menu-item {
     display: flex; justify-content: space-between; align-items: center;
     border-bottom: 1px solid var(--border2);
-    padding: 14px 0;
-    cursor: pointer;
+    padding: 14px 0; cursor: pointer;
   }
   .menu-item-name { font-family: var(--mono); font-size: 15px; color: var(--cyan-text); }
-  .menu-item-val { font-family: var(--mono); font-size: 15px; }
+  .menu-item-val  { font-family: var(--mono); font-size: 15px; }
   #menu-close {
     margin-top: auto;
     background: none; border: 1px solid var(--border);
@@ -225,13 +231,11 @@
     padding: 12px; cursor: pointer; letter-spacing: 2px;
   }
 
-  /* FADE TRANSITION */
   .fade-out { opacity: 0 !important; }
 </style>
 </head>
 <body>
 <div id="app">
-
   <div id="status-bar">
     <span>▲ 4G ▮▮▮</span>
     <span>100% ▮</span>
@@ -264,9 +268,15 @@
 
   <div id="bottom">
     <button id="apply-btn" onclick="applyChange()">APPLY CHANGES</button>
-    <div id="footer">RiverMind Lux v4.2 · Amanda W.</div>
+    <div id="footer">RiverMind Lux v4.3 · Amanda W.</div>
   </div>
+</div>
 
+<!-- NEURAL SYNC OVERLAY -->
+<div id="sync-overlay">
+  <canvas id="sync-canvas" width="260" height="260"></canvas>
+  <div id="sync-label">NEURAL SYNC</div>
+  <div id="sync-sublabel">UPLOADING PARAMETERS...</div>
 </div>
 
 <!-- MENU OVERLAY -->
@@ -291,7 +301,272 @@ const params = [
 ];
 
 let cur = 0;
+let audioCtx = null;
+let lastTickVal = -1;
 
+// ── AUDIO ──────────────────────────────────────────────
+const scale = [261, 294, 330, 392, 440, 523, 587, 659, 784, 880];
+let isMax = false;
+
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+
+function playXylo(noteIdx) {
+  try {
+    const ctx = getAudioCtx();
+    const f = scale[noteIdx];
+    [1, 2.76, 5.4].forEach((harm, i) => {
+      const osc  = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(f * harm, ctx.currentTime);
+      const vols = [0.22, 0.07, 0.025];
+      const durs = [0.45, 0.22, 0.12];
+      gain.gain.setValueAtTime(vols[i], ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + durs[i]);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + durs[i]);
+    });
+  } catch(e) {}
+}
+
+function playMax() {
+  try {
+    const ctx = getAudioCtx();
+    const chord = [523, 659, 784, 1047];
+    chord.forEach((f, i) => {
+      const t = ctx.currentTime + i * 0.07;
+      [1, 2, 3].forEach((harm, j) => {
+        const osc  = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(f * harm, t);
+        const vol = [0.18, 0.06, 0.02][j];
+        gain.gain.setValueAtTime(vol, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.8);
+        osc.start(t); osc.stop(t + 0.8);
+      });
+    });
+    const osc2  = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+    osc2.connect(gain2); gain2.connect(ctx.destination);
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(2093, ctx.currentTime + 0.28);
+    gain2.gain.setValueAtTime(0.14, ctx.currentTime + 0.28);
+    gain2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.0);
+    osc2.start(ctx.currentTime + 0.28);
+    osc2.stop(ctx.currentTime + 1.0);
+  } catch(e) {}
+}
+
+function playTick(value) {
+  const noteIdx = Math.min(9, Math.floor(value / 10));
+  const tickVal = noteIdx;
+  if (value >= 100 && !isMax) {
+    isMax = true;
+    lastTickVal = -1;
+    playMax();
+    return;
+  }
+  if (value < 100) isMax = false;
+  if (tickVal === lastTickVal) return;
+  lastTickVal = tickVal;
+  playXylo(noteIdx);
+}
+
+function playApplySound() {
+  try {
+    const ctx = getAudioCtx();
+    const chord = [523, 659, 784, 1047];
+    chord.forEach((f, i) => {
+      const t = ctx.currentTime + i * 0.07;
+      const osc  = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(f, t);
+      gain.gain.setValueAtTime(0.12, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.6);
+      osc.start(t); osc.stop(t + 0.6);
+    });
+  } catch(e) {}
+}
+
+// ── NEURAL SYNC ANIMATION ──────────────────────────────
+let syncRAF = null;
+let syncStart = 0;
+let syncSoundInterval = null;
+
+function playSyncHum() {
+  try {
+    const ctx = getAudioCtx();
+    const osc   = ctx.createOscillator();
+    const gain  = ctx.createGain();
+    const osc2  = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+    osc.connect(gain);   gain.connect(ctx.destination);
+    osc2.connect(gain2); gain2.connect(ctx.destination);
+    osc.type  = 'sine'; osc.frequency.setValueAtTime(180, ctx.currentTime);
+    osc2.type = 'sine'; osc2.frequency.setValueAtTime(270, ctx.currentTime);
+    gain.gain.setValueAtTime(0.0, ctx.currentTime);
+    gain.gain.linearRampToValueAtTime(0.07, ctx.currentTime + 0.15);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+    gain2.gain.setValueAtTime(0.0, ctx.currentTime);
+    gain2.gain.linearRampToValueAtTime(0.04, ctx.currentTime + 0.2);
+    gain2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+    osc.start(ctx.currentTime);  osc.stop(ctx.currentTime + 0.6);
+    osc2.start(ctx.currentTime); osc2.stop(ctx.currentTime + 0.5);
+  } catch(e) {}
+}
+
+function playSyncComplete() {
+  try {
+    const ctx = getAudioCtx();
+    const notes = [523, 659, 784, 1047, 1319];
+    notes.forEach((f, i) => {
+      const t = ctx.currentTime + i * 0.09;
+      [1, 2, 3].forEach((harm, j) => {
+        const osc  = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(f * harm, t);
+        const vol = [0.22, 0.08, 0.03][j];
+        gain.gain.setValueAtTime(vol, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 1.2);
+        osc.start(t); osc.stop(t + 1.2);
+      });
+    });
+    // Campana final aguda
+    const bell  = ctx.createOscillator();
+    const bellG = ctx.createGain();
+    bell.connect(bellG); bellG.connect(ctx.destination);
+    bell.type = 'sine';
+    bell.frequency.setValueAtTime(2637, ctx.currentTime + 0.45);
+    bellG.gain.setValueAtTime(0.18, ctx.currentTime + 0.45);
+    bellG.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.6);
+    bell.start(ctx.currentTime + 0.45);
+    bell.stop(ctx.currentTime + 1.6);
+  } catch(e) {}
+}
+
+function startSyncAnimation() {
+  const overlay = document.getElementById('sync-overlay');
+  const canvas  = document.getElementById('sync-canvas');
+  const ctx     = canvas.getContext('2d');
+  overlay.classList.add('active');
+  syncStart = performance.now();
+  playSyncHum();
+  syncSoundInterval = setInterval(playSyncHum, 650);
+
+  function draw(now) {
+    const elapsed = (now - syncStart) / 1000;
+    const W = canvas.width, H = canvas.height;
+    ctx.clearRect(0, 0, W, H);
+
+    const cx = W / 2, cy = H / 2;
+
+    // Rotating rings
+    for (let r = 0; r < 4; r++) {
+      const radius  = 40 + r * 28;
+      const speed   = (r % 2 === 0 ? 1 : -1) * (0.8 + r * 0.3);
+      const angle   = elapsed * speed;
+      const dashes  = 6 + r * 2;
+      const opacity = 0.15 + 0.25 * Math.sin(elapsed * 2 + r);
+
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(angle);
+      ctx.strokeStyle = `rgba(74,184,208,${opacity})`;
+      ctx.lineWidth = 1;
+      ctx.setLineDash([Math.PI * radius / dashes * 0.6, Math.PI * radius / dashes * 0.4]);
+      ctx.beginPath();
+      ctx.arc(0, 0, radius, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // Scanning horizontal lines
+    for (let i = 0; i < 8; i++) {
+      const y      = ((elapsed * 60 + i * 33) % H);
+      const alpha  = 0.06 + 0.06 * Math.sin(elapsed * 3 + i);
+      ctx.strokeStyle = `rgba(74,184,208,${alpha})`;
+      ctx.lineWidth = 1;
+      ctx.setLineDash([]);
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(W, y);
+      ctx.stroke();
+    }
+
+    // Center pulsing dot
+    const pulse = 0.5 + 0.5 * Math.sin(elapsed * 6);
+    const grad  = ctx.createRadialGradient(cx, cy, 0, cx, cy, 20 + pulse * 10);
+    grad.addColorStop(0, `rgba(24,196,138,${0.6 + pulse * 0.4})`);
+    grad.addColorStop(1, 'rgba(24,196,138,0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(cx, cy, 20 + pulse * 10, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Data packets shooting outward
+    for (let p = 0; p < 6; p++) {
+      const baseAngle = (p / 6) * Math.PI * 2 + elapsed * 1.5;
+      const dist      = ((elapsed * 80 + p * 40) % 120);
+      const px        = cx + Math.cos(baseAngle) * dist;
+      const py        = cy + Math.sin(baseAngle) * dist;
+      const alpha2    = Math.max(0, 1 - dist / 120);
+      ctx.fillStyle   = `rgba(74,184,208,${alpha2 * 0.8})`;
+      ctx.beginPath();
+      ctx.arc(px, py, 2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Progress arc
+    const progress = Math.min(1, elapsed / 2.5);
+    ctx.strokeStyle = `rgba(24,196,138,0.7)`;
+    ctx.lineWidth   = 2;
+    ctx.setLineDash([]);
+    ctx.beginPath();
+    ctx.arc(cx, cy, 110, -Math.PI / 2, -Math.PI / 2 + progress * Math.PI * 2);
+    ctx.stroke();
+
+    if (elapsed < 2.8) {
+      syncRAF = requestAnimationFrame(draw);
+    } else {
+      finishSync();
+    }
+  }
+
+  syncRAF = requestAnimationFrame(draw);
+}
+
+function finishSync() {
+  clearInterval(syncSoundInterval);
+  syncSoundInterval = null;
+  playSyncComplete();
+  const overlay  = document.getElementById('sync-overlay');
+  const sublabel = document.getElementById('sync-sublabel');
+  sublabel.textContent = '✓ PARAMETERS APPLIED';
+  sublabel.style.color = '#18c48a';
+  setTimeout(() => {
+    overlay.classList.remove('active');
+    sublabel.textContent  = 'UPLOADING PARAMETERS...';
+    sublabel.style.color  = '';
+    const btn = document.getElementById('apply-btn');
+    btn.textContent  = 'APPLY CHANGES';
+    btn.style.color  = '';
+    btn.style.borderColor = '';
+    btn.disabled     = false;
+  }, 700);
+}
+
+// ── CORE ───────────────────────────────────────────────
 function fillColor(v) {
   if (v > 70) return '#18c48a';
   if (v > 40) return '#1ab8d0';
@@ -300,7 +575,9 @@ function fillColor(v) {
 
 function buildDots() {
   const c = document.getElementById('dots');
-  c.innerHTML = params.map((_,i) => `<div class="dot${i===cur?' active':''}" style="width:${i===cur?9:5}px;height:${i===cur?9:5}px;"></div>`).join('');
+  c.innerHTML = params.map((_,i) =>
+    `<div class="dot${i===cur?' active':''}" style="width:${i===cur?9:5}px;height:${i===cur?9:5}px;"></div>`
+  ).join('');
 }
 
 function renderBar(animate) {
@@ -314,10 +591,11 @@ function renderBar(animate) {
   } else {
     document.getElementById('param-name').textContent = p.name;
   }
-  document.getElementById('big-val').textContent = p.val;
+  lastTickVal = -1;
+  document.getElementById('big-val').textContent  = p.val;
   document.getElementById('param-desc').textContent = p.desc;
   const fill = document.getElementById('big-fill');
-  fill.style.height = p.val + '%';
+  fill.style.height     = p.val + '%';
   fill.style.background = fillColor(p.val);
   buildDots();
 }
@@ -332,13 +610,13 @@ function changePage(dir) {
   renderBar(true);
 }
 
-// Touch/mouse drag on bar
+// Drag
 const bar = document.getElementById('big-bar');
 let dragging = false;
 
 function getValFromY(clientY) {
   const rect = bar.getBoundingClientRect();
-  const rel = (rect.bottom - clientY) / rect.height;
+  const rel  = (rect.bottom - clientY) / rect.height;
   return Math.max(0, Math.min(100, Math.round(rel * 100)));
 }
 
@@ -346,35 +624,37 @@ function setVal(v) {
   params[cur].val = v;
   document.getElementById('big-val').textContent = v;
   const fill = document.getElementById('big-fill');
-  fill.style.height = v + '%';
+  fill.style.height     = v + '%';
   fill.style.background = fillColor(v);
+  playTick(v);
 }
 
 bar.addEventListener('mousedown', e => { dragging = true; setVal(getValFromY(e.clientY)); });
 window.addEventListener('mousemove', e => { if (dragging) setVal(getValFromY(e.clientY)); });
 window.addEventListener('mouseup', () => { dragging = false; });
 
-bar.addEventListener('touchstart', e => { dragging = true; setVal(getValFromY(e.touches[0].clientY)); e.preventDefault(); }, {passive:false});
-window.addEventListener('touchmove', e => { if (dragging) { setVal(getValFromY(e.touches[0].clientY)); e.preventDefault(); } }, {passive:false});
+bar.addEventListener('touchstart', e => {
+  dragging = true;
+  setVal(getValFromY(e.touches[0].clientY));
+  e.preventDefault();
+}, {passive:false});
+window.addEventListener('touchmove', e => {
+  if (dragging) { setVal(getValFromY(e.touches[0].clientY)); e.preventDefault(); }
+}, {passive:false});
 window.addEventListener('touchend', () => { dragging = false; });
 
-// Apply button
+// Apply
 function applyChange() {
   const btn = document.getElementById('apply-btn');
-  btn.textContent = 'SYNCING...';
-  btn.style.color = '#18c48a';
+  btn.textContent  = 'SYNCING...';
+  btn.style.color  = '#18c48a';
   btn.style.borderColor = '#18c48a';
-  setTimeout(() => {
-    btn.textContent = '✓ APPLIED';
-    setTimeout(() => {
-      btn.textContent = 'APPLY CHANGES';
-      btn.style.color = '';
-      btn.style.borderColor = '';
-    }, 1400);
-  }, 800);
+  btn.disabled     = true;
+  playApplySound();
+  startSyncAnimation();
 }
 
-// Menu overlay
+// Menu
 function toggleMenu() {
   const m = document.getElementById('menu-overlay');
   m.classList.toggle('open');
@@ -396,14 +676,12 @@ function jumpTo(i) {
   renderBar(true);
 }
 
-// Init
 buildGrid();
 renderBar(false);
 
-// Service Worker registration
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
   });
 }
 </script>
