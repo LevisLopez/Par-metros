@@ -1,4 +1,4 @@
-const CACHE = 'rivermind-v3';
+const CACHE = 'rivermind-v4';
 const ASSETS = [
   './index.html',
   './manifest.json',
